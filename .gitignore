@@ -20,6 +20,7 @@ media
 
 # User-specific stuff:
 .idea/**
+live-static/
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
