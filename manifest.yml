@@ -1,9 +1,7 @@
 applications:
 - name: DiVA_API
-  host: enea
+  host: digischool
 # This is command provided by cf -c option
   command: bash ./run.sh
-  buildpack: https://github.com/cyberdelia/heroku-geo-buildpack.git
-  buildpack: python_buildpack
 services:
   - diva-iceod-postgresql

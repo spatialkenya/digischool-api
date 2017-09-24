@@ -1,6 +1,7 @@
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from rest_framework.serializers import ModelSerializer
 
-from .models import County
+from .models import County, School, Issue
 
 
 class CountySerializer(GeoFeatureModelSerializer):
@@ -10,9 +11,29 @@ class CountySerializer(GeoFeatureModelSerializer):
         model = County
         geo_field = 'geom'
         fields = '__all__'
+        auto_bbox = True
 
-    def get_properties(self, instance, fields):
-        properties = super(CountySerializer, self).get_properties(instance, fields)
-        extent = instance.extent
-        properties['extent'] = extent
-        return properties
+
+class SchoolSerializer(GeoFeatureModelSerializer):
+    """
+    serialize schools to geojson
+    """
+
+    class Meta:
+        model = School
+        geo_field = 'geom'
+        fields = '__all__'
+        depth = 1
+
+
+class IssueSerializer(ModelSerializer):
+    """
+    serialize Issues
+    """
+
+    class Meta:
+        model = Issue
+        fields = (
+            'id', 'school', 'date', 'status', 'error_code',
+            'serial_number', 'agent', 'report', 'technical_report')
+        depth = 1

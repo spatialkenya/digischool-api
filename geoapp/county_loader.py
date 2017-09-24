@@ -3,6 +3,7 @@ from django.contrib.gis.utils import LayerMapping
 from .models import County
 
 county_mapping = {
+    'county_id': 'county_id',
     'name': 'county',
     'geom': 'MULTIPOLYGON',
 }
