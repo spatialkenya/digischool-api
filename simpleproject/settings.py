@@ -1,9 +1,7 @@
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -12,10 +10,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')61@)!d!s_j4+3oba1m2kds(e7khzobnbq&l(=04su#(2x4&#n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ['digischool.mybluemix.net', '127.0.0.1']
 
 # Application definition
 
@@ -30,12 +27,15 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_gis',
+    'corsheaders',
     'leaflet',
     'geoapp.apps.GeoappConfig',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -66,22 +66,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'simpleproject.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME':'bluemix',
-        'USER':'postgres',
-        'PASSWORD':'postgres',
-        'HOST':'localhost',
-        'PORT': '',
+        'NAME': 'bluemix',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
     }
 }
 
 import dj_database_url
+
 db_from_env = dj_database_url.config()
 
 if db_from_env:
@@ -89,8 +88,6 @@ if db_from_env:
     DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -128,18 +125,29 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, "live-static", "static-root")
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+CORS_ORIGIN_ALLOW_ALL = True
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ), 'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
+
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
 #     'formatters': {
 #         'verbose': {
-#             'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-#             'datefmt' : "%d/%b/%Y %H:%M:%S"
+#             'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+#             'datefmt': "%d/%b/%Y %H:%M:%S"
 #         },
 #         'simple': {
 #             'format': '%(levelname)s %(message)s'
@@ -155,9 +163,9 @@ REST_FRAMEWORK = {
 #     },
 #     'loggers': {
 #         'django': {
-#             'handlers':['file'],
+#             'handlers': ['file'],
 #             'propagate': True,
-#             'level':'DEBUG',
+#             'level': 'DEBUG',
 #         },
 #         'simpleproject': {
 #             'handlers': ['file'],
@@ -167,7 +175,7 @@ REST_FRAMEWORK = {
 # }
 
 LEAFLET_CONFIG = {
-    'TILES': 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', #Tiles to be used
+    'TILES': 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',  # Tiles to be used
     'DEFAULT_CENTER': (-1.09713135, 37.014170107681),
     'DEFAULT_ZOOM': 15,
 }

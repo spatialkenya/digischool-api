@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.contrib.gis.db import models
 
 
@@ -8,18 +6,21 @@ class County(models.Model):
     name = models.CharField(max_length=100)
     geom = models.MultiPolygonField(srid=4326)
 
+    class Meta:
+        verbose_name_plural = "Counties"
+
     def __unicode__(self):
         return self.name
 
 
 class School(models.Model):
-    name = models.CharField(max_length=100)
-    county = models.ForeignKey(County)
+    name = models.CharField(max_length=50)
+    county = models.ForeignKey(County, related_name='schools', on_delete=models.CASCADE)
     class_one_enrollment = models.IntegerField()
     present_devices = models.IntegerField()
-    sub_county = models.CharField(max_length=50)
     zone = models.CharField(max_length=50)
-    emmis_code = models.CharField(max_length=50)
+    emmis_code = models.CharField(max_length=100, blank=True, null=True)
+    school_code = models.CharField(primary_key=True, max_length=50)
     geom = models.PointField(srid=4326)
 
     def __unicode__(self):
@@ -27,20 +28,14 @@ class School(models.Model):
 
 
 class Issue(models.Model):
-    STATUS_CHOICES = (
-        ('closed', 'Closed'),
-        ('escalated', 'Escalated'),
-        ('resolved', 'Resolved')
-    )
-    id = models.CharField(max_length=50, primary_key=True)
-    school = models.ForeignKey(School)
-    date = models.DateTimeField()
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    ticket_number = models.CharField(max_length=20, primary_key=True)
     error_code = models.CharField(max_length=50)
-    serial_number = models.CharField(max_length=100)
-    agent = models.CharField(max_length=50)
+    school = models.ForeignKey(School, related_name='issues', on_delete=models.CASCADE)
     report = models.TextField()
-    technical_report = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=50)
+    serial_number = models.CharField(max_length=100)
+    date = models.DateField()
+    technical_report = models.TextField(blank=True)
 
     def __unicode__(self):
-        return self.school.name
+        return self.ticket_number + self.school.name

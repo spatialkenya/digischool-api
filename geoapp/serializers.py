@@ -1,39 +1,34 @@
+from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
-from rest_framework.serializers import ModelSerializer
-
 from .models import County, School, Issue
 
 
-class CountySerializer(GeoFeatureModelSerializer):
-    """ A class to serialize counties as GeoJSON compatible data """
-
+class IssueSerializer(serializers.ModelSerializer):
     class Meta:
-        model = County
-        geo_field = 'geom'
+        model = Issue
         fields = '__all__'
-        auto_bbox = True
 
 
 class SchoolSerializer(GeoFeatureModelSerializer):
-    """
-    serialize schools to geojson
-    """
+    issues_count = serializers.SerializerMethodField()
 
     class Meta:
         model = School
         geo_field = 'geom'
-        fields = '__all__'
-        depth = 1
+        fields = ("school_code",'name', 'present_devices', 'county', "class_one_enrollment",'issues_count')
+
+    @staticmethod
+    def get_issues_count(obj):
+        return obj.issues.filter(status='Closed').count()
 
 
-class IssueSerializer(ModelSerializer):
-    """
-    serialize Issues
-    """
+class CountySerializer(serializers.ModelSerializer):
+    schools_count = serializers.SerializerMethodField()
 
     class Meta:
-        model = Issue
-        fields = (
-            'id', 'school', 'date', 'status', 'error_code',
-            'serial_number', 'agent', 'report', 'technical_report')
-        depth = 1
+        model = County
+        fields = ('name', 'schools_count')
+
+    @staticmethod
+    def get_schools_count(obj):
+        return obj.schools.count()
