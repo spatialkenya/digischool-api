@@ -6,7 +6,10 @@ django-jet==1.0.6
 django-leaflet==0.22.0
 djangorestframework==3.6.4
 djangorestframework-gis==0.11.2
+drf-url-filters==0.5.1
 gunicorn==19.7.1
 psycopg2==2.7.3.1
 pytz==2017.2
+six==1.11.0
+voluptuous==0.10.5
 whitenoise==3.3.0

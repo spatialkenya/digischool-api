@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_gis',
+    'filters',
     'corsheaders',
     'leaflet',
     'geoapp.apps.GeoappConfig',
@@ -128,6 +129,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "live-static", "static-root")
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',

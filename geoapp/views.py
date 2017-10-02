@@ -1,23 +1,34 @@
 from rest_framework import viewsets
 from .models import County, School, Issue
 from .serializers import CountySerializer, SchoolSerializer, IssueSerializer
+from filters.mixins import (
+    FiltersMixin,
+)
 
 
 class CountyViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows  to query Counties
     """
-    queryset = County.objects.all()
     serializer_class = CountySerializer
 
+    def get_queryset(self):
+        queryset = County.objects.all()
+        # Set up eager loading to avoid N+1 selects
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
 
-class SchoolViewSet(viewsets.ModelViewSet):
+
+class SchoolViewSet(FiltersMixin, viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows  to query schools
     """
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
-    filter_fields = ('name', 'county', 'present_devices', 'class_one_enrollment')
+    filter_mappings = {
+        'name': 'name__icontains',
+        'county_id': 'county'
+    }
 
 
 class IssueViewSet(viewsets.ModelViewSet):
