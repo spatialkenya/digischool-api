@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')61@)!d!s_j4+3oba1m2kds(e7khzobnbq&l(=04su#(2x4&#n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['digischool.mybluemix.net', '127.0.0.1']
 

@@ -1,11 +1,9 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
-
 from .models import County, School, Issue
 from .serializers import CountySerializer, SchoolSerializer, IssueSerializer
 
 
-class CountyViewSet(viewsets.ModelViewSet):
+class CountyViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows  to query Counties
     """
@@ -14,7 +12,6 @@ class CountyViewSet(viewsets.ModelViewSet):
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
-
     """
     API endpoint that allows  to query schools
     """
@@ -29,4 +26,4 @@ class IssueViewSet(viewsets.ModelViewSet):
     """
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    filter_fields = ('error_code', 'school', 'status','date','school__county')
+    filter_fields = ('error_code', 'school', 'status', 'date', 'school__county')
