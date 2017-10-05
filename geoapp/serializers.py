@@ -17,14 +17,13 @@ class IssueSerializer(serializers.ModelSerializer):
 
 
 class SchoolSerializer(GeoFeatureModelSerializer):
-    # issues = IssueSerializer(many=True)
-    #
-    # issues_count = serializers.SerializerMethodField()
+    county = serializers.StringRelatedField()
 
     class Meta:
         model = School
         geo_field = 'geom'
-        fields = ("school_code", 'name', 'present_devices', "class_one_enrollment")
+        fields = ("school_code", 'name', 'present_devices', "class_one_enrollment", 'county')
+
 
 
 class CountySerializer(GeoFeatureModelSerializer):

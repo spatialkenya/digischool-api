@@ -30,6 +30,10 @@ class SchoolViewSet(FiltersMixin, viewsets.ReadOnlyModelViewSet):
         'county_id': 'county'
     }
 
+    def get_queryset(self):
+        queryset = School.objects.select_related('county').all()
+        return queryset
+
 
 class IssueViewSet(viewsets.ModelViewSet):
     """
