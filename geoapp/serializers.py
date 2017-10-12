@@ -2,6 +2,14 @@ from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from .models import County, School, Issue
 
+from django.contrib.auth.models import User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email',)
+
 
 class IssueSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,7 +31,6 @@ class SchoolSerializer(GeoFeatureModelSerializer):
         model = School
         geo_field = 'geom'
         fields = ("school_code", 'name', 'present_devices', "class_one_enrollment", 'county')
-
 
 
 class CountySerializer(GeoFeatureModelSerializer):

@@ -8,7 +8,7 @@ county_mapping = {
     'geom': 'MULTIPOLYGON',
 }
 
-county_data = '/home/oty/Desktop/kenya_counties/kenya_counties.shp'
+county_data = '/home/geogeek/Desktop/kenya_counties.shp'
 
 
 def load_county_data(verbose=True):

@@ -1,9 +1,24 @@
 from rest_framework import viewsets
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 from .models import County, School, Issue
-from .serializers import CountySerializer, SchoolSerializer, IssueSerializer
+from .serializers import CountySerializer, SchoolSerializer, IssueSerializer, UserSerializer
 from filters.mixins import (
     FiltersMixin,
 )
+
+
+class DivaObtainAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super(DivaObtainAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        profile = {'username': token.user.username, 'email': token.user.email}
+        context = {
+            'token': token.key,
+            'profile': profile
+        }
+        return Response(context)
 
 
 class CountyViewSet(viewsets.ReadOnlyModelViewSet):
