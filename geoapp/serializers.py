@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from .models import County, School, Issue
+from django.db.models import Sum
+
 
 from django.contrib.auth.models import User
 
@@ -14,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 class IssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issue
-        fields = ('error_code', 'date', 'status')
+        fields = ('error_code', 'date', 'status','school')
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -43,7 +45,9 @@ class CountySerializer(GeoFeatureModelSerializer):
     def get_properties(self, instance, fields):
         properties = super(CountySerializer, self).get_properties(instance, fields)
         school_count = instance.schools.count()
+        devices_count = instance.schools.aggregate(Sum('present_devices'))
         properties['schools'] = school_count
+        properties['devices'] = devices_count['present_devices__sum']
         return properties
 
     @staticmethod
