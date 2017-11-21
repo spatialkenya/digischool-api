@@ -1,12 +1,15 @@
-from rest_framework import viewsets
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
-from .models import County, School, Issue
-from .serializers import CountySerializer, SchoolSerializer, IssueSerializer, UserSerializer
+from django.db.models import Sum
 from filters.mixins import (
     FiltersMixin,
 )
+from rest_framework import viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import County, School, Issue
+from .serializers import CountySerializer, SchoolSerializer, IssueSerializer
 
 
 class DivaObtainAuthToken(ObtainAuthToken):
@@ -57,3 +60,15 @@ class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
     filter_fields = ('error_code', 'school', 'status', 'date', 'school__county')
+
+
+class SchoolAnalysis(APIView):
+    def get(self, request):
+        schools = School.objects.all()
+        schools_total = schools.count()
+        class_one_total = schools.aggregate(class_one_total=Sum("class_one_enrollment"))
+        data = {
+            "schools_total": schools_total,
+            "class_one_total": class_one_total["class_one_total"]
+        }
+        return Response(data)

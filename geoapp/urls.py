@@ -12,5 +12,6 @@ router.register(r'issues', views.IssueViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^auth/', views.DivaObtainAuthToken.as_view(), name='auth'),
+    url(r'^analysis/', views.SchoolAnalysis.as_view(), name='analysis'),
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

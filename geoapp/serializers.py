@@ -1,10 +1,9 @@
+from django.contrib.auth.models import User
+from django.db.models import Sum
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
+
 from .models import County, School, Issue
-from django.db.models import Sum
-
-
-from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 class IssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issue
-        fields = ('error_code', 'date', 'status','school')
+        fields = ('error_code', 'date', 'status', 'school')
 
     @staticmethod
     def setup_eager_loading(queryset):
