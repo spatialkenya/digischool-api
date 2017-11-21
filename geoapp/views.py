@@ -67,8 +67,10 @@ class SchoolAnalysis(APIView):
         schools = School.objects.all()
         schools_total = schools.count()
         class_one_total = schools.aggregate(class_one_total=Sum("class_one_enrollment"))
+        total_devices = schools.aggregate(total_devices=Sum("present_devices"))
         data = {
             "schools_total": schools_total,
-            "class_one_total": class_one_total["class_one_total"]
+            "class_one_total": class_one_total["class_one_total"],
+            "total_devices": total_devices["total_devices"]
         }
         return Response(data)
